@@ -6,6 +6,7 @@ public class TorchController : MonoBehaviour
     [SerializeField] private Light torchLight;
 
     private bool _on = true;
+    public bool IsOn => _on;
 
     private void Start()
     {
