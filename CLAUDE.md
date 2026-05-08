@@ -17,11 +17,34 @@
 - Singleplayer first-person atmospheric puzzle game
 - Torch is only light source — pitch black without it
 
-## Current State (Session 1 complete)
+## Current State (Session 2 complete)
 - FPS controller: WASD, mouse look, Left Ctrl crouch
 - Torch toggle: F key, point light on player camera
 - Cave room: ProBuilder 20x20x5m enclosed box, inverted normals, Cave_Rock material
 - Lighting: pitch black with no ambient, skybox reflection bug fixed
+- Player tag set to "Player"; PlayerHealth component on Player
+- GasPocket_01 at (3, 1.5, 3): BoxCollider trigger (3x3x3), GasPocket script (torch-on-inside → PlayerHealth.Die())
+- 3D spatial hiss: gas_hiss_loop.wav, spatialBlend=1, min=1, max=12, Logarithmic rolloff
+- GasCrossfadeLoop: two AudioSources crossfade over overlapDuration (default 4.5s) — no hard loop cut
+- Debug: red point light (intensity 0.3, range 8) on GasPocket_01 as DebugLight child — remove before ship
+
+## Planned Systems (not yet built)
+- Torch melee: click to swing, viewmodel with player arms visible at all times
+- Zone structure: tunnels = single binary zone; chambers = hidden grid of cells (3x3 / 4x4)
+- Creatures — scorpions: light-reactive (flee torch, creep back in dark), attack on proximity, killable with torch swing
+- Creatures — variety: rattlesnakes near entrance, deeper creatures TBD (bats, centipedes, spiders)
+- Rock throwing: pickup from ground, throw to distract/spark gas, audio masking of hiss
+- Chalk marking: limited supply, X stamp on wall surface, survival resource
+- Oxygen meter: drains inside gas zones, refills outside, death at zero
+- Health system: drains from creature attacks, no regen (or slow TBD), death at zero
+- HUD: top-left task label, bottom-left torch status, bottom-right health + oxygen bars
+- Checkpoints: save progress and refill resources throughout cave
+- Death/restart flow with UI
+- Level exit + ending vista: Moab canyon at golden hour, implies world continues
+- Full cave level: hand-built tunnels + chambers, one complete playable layout
+- Save system: checkpoint-based
+- Settings menu: volume, sensitivity, keybinds, display
+- Controller support
 
 ## Architecture
 - player_controller or PlayerController script handles movement + mouse look
