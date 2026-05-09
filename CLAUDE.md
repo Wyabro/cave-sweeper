@@ -17,7 +17,7 @@
 - Singleplayer first-person atmospheric puzzle game
 - Torch is only light source — pitch black without it
 
-## Current State (Session 5 complete)
+## Current State (Session 6 complete)
 - FPS controller: WASD, mouse look, Left Ctrl crouch
 - Torch toggle: F key, point light on player camera
 - Cave room: ProBuilder 20x20x5m enclosed box, inverted normals, Cave_Rock material
@@ -40,6 +40,7 @@
 - Input system: project uses New Input System (com.unity.inputsystem 1.19.0); StandaloneInputModule must NOT be used; use FindAnyObjectByType (FindFirstObjectByType is deprecated)
 - TorchController: left-click swings TorchLight (localPosition lunge: +0.4z/-0.15y and back over 0.3s); _swinging guard prevents re-entry; TorchMeleeHit() stub present for future damage; point light rotation has no visual effect — translation used instead
 - HUD torch binding: TorchStatus label updates each frame to "LIT"/"UNLIT" via TorchController.IsOn
+- HUD styling: no panel backgrounds, atmospheric opacity, character spacing on labels, torch icon = head+shaft primitives, "[F] TORCH" caps, 2.5x scale pass applied; note HUD rebuilds in Awake() so scale changes only visible after full play mode restart
 
 ## Planned Systems (not yet built)
 - Torch melee: viewmodel with player arms (TorchMeleeHit stub ready for damage hookup)
