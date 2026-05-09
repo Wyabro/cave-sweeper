@@ -17,7 +17,7 @@
 - Singleplayer first-person atmospheric puzzle game
 - Torch is only light source — pitch black without it
 
-## Current State (Session 4 complete)
+## Current State (Session 5 complete)
 - FPS controller: WASD, mouse look, Left Ctrl crouch
 - Torch toggle: F key, point light on player camera
 - Cave room: ProBuilder 20x20x5m enclosed box, inverted normals, Cave_Rock material
@@ -37,11 +37,12 @@
   - Block color = warm on / dim off; SetBar uses Ceil(normalized × N)
   - All elements raycastTarget=false; PlayerHealth/PlayerOxygen auto-found via FindFirstObjectByType if not assigned
 - TMP Essential Resources imported (Assets/TextMesh Pro/)
-- Input system: project uses New Input System (com.unity.inputsystem 1.19.0); StandaloneInputModule must NOT be used
+- Input system: project uses New Input System (com.unity.inputsystem 1.19.0); StandaloneInputModule must NOT be used; use FindAnyObjectByType (FindFirstObjectByType is deprecated)
+- TorchController: left-click swings TorchLight (localPosition lunge: +0.4z/-0.15y and back over 0.3s); _swinging guard prevents re-entry; TorchMeleeHit() stub present for future damage; point light rotation has no visual effect — translation used instead
+- HUD torch binding: TorchStatus label updates each frame to "LIT"/"UNLIT" via TorchController.IsOn
 
 ## Planned Systems (not yet built)
-- Torch melee: click to swing, viewmodel with player arms visible at all times
-- Torch state binding in HUD (UNLIT/LIT label is currently static)
+- Torch melee: viewmodel with player arms (TorchMeleeHit stub ready for damage hookup)
 - Zone structure: tunnels = single binary zone; chambers = hidden grid of cells (3x3 / 4x4)
 - Creatures — scorpions: light-reactive (flee torch, creep back in dark), attack on proximity, killable with torch swing
 - Creatures — variety: rattlesnakes near entrance, deeper creatures TBD (bats, centipedes, spiders)
