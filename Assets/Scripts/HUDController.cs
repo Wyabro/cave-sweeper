@@ -13,11 +13,10 @@ public class HUDController : MonoBehaviour
     private TorchController _torchController;
     private TextMeshProUGUI _torchStatusText;
 
-    private static readonly Color TextPrimary = new Color(0.88f, 0.80f, 0.66f, 0.85f);
-    private static readonly Color TextDim     = new Color(0.88f, 0.80f, 0.66f, 0.50f);
-    private static readonly Color PanelBg     = new Color(0.05f, 0.04f, 0.03f, 0.45f);
-    private static readonly Color BlockOn     = new Color(0.88f, 0.80f, 0.66f, 0.90f);
-    private static readonly Color BlockOff    = new Color(0.88f, 0.80f, 0.66f, 0.12f);
+    private static readonly Color TextPrimary = new Color(0.88f, 0.80f, 0.66f, 0.75f);
+    private static readonly Color TextDim     = new Color(0.88f, 0.80f, 0.66f, 0.38f);
+    private static readonly Color BlockOn     = new Color(0.88f, 0.80f, 0.66f, 0.82f);
+    private static readonly Color BlockOff    = new Color(0.88f, 0.80f, 0.66f, 0.10f);
 
     private Image[] _healthBlocks;
     private Image[] _oxygenBlocks;
@@ -77,16 +76,16 @@ public class HUDController : MonoBehaviour
     {
         var panel = MakePanel(canvasT, "TopLeft",
             new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(0f, 1f),
-            new Vector2(20f, -20f), new Vector2(320f, 60f));
-        AddBg(panel);
+            new Vector2(40f, -40f), new Vector2(525f, 105f));
 
         var title = MakeTMP(panel, "TaskTitle", "CURRENT TASK",
-            12f, FontStyles.Bold, TextAlignmentOptions.TopLeft);
-        SetRT(title.rectTransform, new Vector2(10f, -8f), new Vector2(300f, 18f));
+            22f, FontStyles.Bold, TextAlignmentOptions.TopLeft);
+        title.characterSpacing = 7f;
+        SetRT(title.rectTransform, new Vector2(0f, 0f), new Vector2(525f, 32f));
 
         var objective = MakeTMP(panel, "TaskObjective", "Find the way out.",
-            15f, FontStyles.Italic, TextAlignmentOptions.TopLeft);
-        SetRT(objective.rectTransform, new Vector2(10f, -30f), new Vector2(300f, 22f));
+            28f, FontStyles.Italic, TextAlignmentOptions.TopLeft);
+        SetRT(objective.rectTransform, new Vector2(0f, -40f), new Vector2(525f, 50f));
     }
 
     // Bottom-left: torch status ────────────────────────────────────────────
@@ -95,25 +94,34 @@ public class HUDController : MonoBehaviour
     {
         var panel = MakePanel(canvasT, "BottomLeft",
             new Vector2(0f, 0f), new Vector2(0f, 0f), new Vector2(0f, 0f),
-            new Vector2(20f, 20f), new Vector2(180f, 56f));
-        AddBg(panel);
+            new Vector2(40f, 40f), new Vector2(180f, 80f));
 
-        var iconGo  = new GameObject("TorchIcon");
-        var iconRt  = iconGo.AddComponent<RectTransform>();
-        iconGo.transform.SetParent(panel, false);
-        var iconImg = iconGo.AddComponent<Image>();
-        iconImg.color = BlockOn;
-        iconImg.raycastTarget = false;
-        SetRT(iconRt, new Vector2(8f, -12f), new Vector2(14f, 14f));
+        // Torch head
+        var headGo = new GameObject("TorchHead");
+        var headRt = headGo.AddComponent<RectTransform>();
+        headGo.transform.SetParent(panel, false);
+        var headImg = headGo.AddComponent<Image>();
+        headImg.color = BlockOn;
+        headImg.raycastTarget = false;
+        SetRT(headRt, new Vector2(0f, -8f), new Vector2(18f, 18f));
+
+        // Torch shaft
+        var shaftGo = new GameObject("TorchShaft");
+        var shaftRt = shaftGo.AddComponent<RectTransform>();
+        shaftGo.transform.SetParent(panel, false);
+        var shaftImg = shaftGo.AddComponent<Image>();
+        shaftImg.color = BlockOn;
+        shaftImg.raycastTarget = false;
+        SetRT(shaftRt, new Vector2(6f, -26f), new Vector2(5f, 45f));
 
         _torchStatusText = MakeTMP(panel, "TorchStatus", "UNLIT",
-            14f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
-        SetRT(_torchStatusText.rectTransform, new Vector2(28f, -8f), new Vector2(130f, 20f));
+            25f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
+        SetRT(_torchStatusText.rectTransform, new Vector2(32f, -8f), new Vector2(140f, 35f));
 
-        var hint = MakeTMP(panel, "KeybindHint", "[F] torch",
-            11f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
+        var hint = MakeTMP(panel, "KeybindHint", "[F] TORCH",
+            20f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
         hint.color = TextDim;
-        SetRT(hint.rectTransform, new Vector2(28f, -30f), new Vector2(130f, 18f));
+        SetRT(hint.rectTransform, new Vector2(32f, -45f), new Vector2(140f, 30f));
     }
 
     // Bottom-right: health + oxygen bars ──────────────────────────────────
@@ -122,29 +130,30 @@ public class HUDController : MonoBehaviour
     {
         var panel = MakePanel(canvasT, "BottomRight",
             new Vector2(1f, 0f), new Vector2(1f, 0f), new Vector2(1f, 0f),
-            new Vector2(-20f, 20f), new Vector2(210f, 96f));
-        AddBg(panel);
+            new Vector2(-40f, 40f), new Vector2(350f, 160f));
 
         var healthLabel = MakeTMP(panel, "HealthLabel", "HEALTH",
-            11f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
+            21f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
         healthLabel.color = TextDim;
-        SetRT(healthLabel.rectTransform, new Vector2(8f, -8f), new Vector2(194f, 16f));
+        healthLabel.characterSpacing = 5f;
+        SetRT(healthLabel.rectTransform, new Vector2(15f, -15f), new Vector2(320f, 30f));
 
         var healthBlocksGo = new GameObject("HealthBlocks");
         var healthRt = healthBlocksGo.AddComponent<RectTransform>();
         healthBlocksGo.transform.SetParent(panel, false);
-        SetRT(healthRt, new Vector2(8f, -28f), new Vector2(194f, 16f));
+        SetRT(healthRt, new Vector2(15f, -52f), new Vector2(320f, 20f));
         AddHLG(healthBlocksGo);
 
         var oxygenLabel = MakeTMP(panel, "OxygenLabel", "OXYGEN",
-            11f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
+            21f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
         oxygenLabel.color = TextDim;
-        SetRT(oxygenLabel.rectTransform, new Vector2(8f, -54f), new Vector2(194f, 16f));
+        oxygenLabel.characterSpacing = 5f;
+        SetRT(oxygenLabel.rectTransform, new Vector2(15f, -90f), new Vector2(320f, 30f));
 
         var oxygenBlocksGo = new GameObject("OxygenBlocks");
         var oxygenRt = oxygenBlocksGo.AddComponent<RectTransform>();
         oxygenBlocksGo.transform.SetParent(panel, false);
-        SetRT(oxygenRt, new Vector2(8f, -74f), new Vector2(194f, 16f));
+        SetRT(oxygenRt, new Vector2(15f, -127f), new Vector2(320f, 20f));
         AddHLG(oxygenBlocksGo);
 
         return (healthRt, oxygenRt);
@@ -183,21 +192,6 @@ public class HUDController : MonoBehaviour
         return tmp;
     }
 
-    private void AddBg(Transform parent)
-    {
-        var go = new GameObject("Bg");
-        var rt = go.AddComponent<RectTransform>();
-        go.transform.SetParent(parent, false);
-        go.transform.SetAsFirstSibling();
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.pivot     = new Vector2(0.5f, 0.5f);
-        rt.offsetMin = Vector2.zero;
-        rt.offsetMax = Vector2.zero;
-        var img = go.AddComponent<Image>();
-        img.color = PanelBg;
-        img.raycastTarget = false;
-    }
 
     private void AddHLG(GameObject go)
     {
@@ -227,7 +221,7 @@ public class HUDController : MonoBehaviour
             var go = new GameObject($"Block_{i}");
             var rt = go.AddComponent<RectTransform>();
             go.transform.SetParent(parent, false);
-            rt.sizeDelta = new Vector2(16f, 14f);
+            rt.sizeDelta = new Vector2(20f, 15f);
             var img = go.AddComponent<Image>();
             img.color = BlockOn;
             img.raycastTarget = false;
