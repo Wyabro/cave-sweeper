@@ -6,6 +6,7 @@ public class GasPocket : MonoBehaviour
 {
     private TorchController _torch;
     private PlayerHealth _playerHealth;
+    private PlayerOxygen _playerOxygen;
     private bool _playerInside;
 
     private void Awake()
@@ -25,12 +26,16 @@ public class GasPocket : MonoBehaviour
         if (!other.CompareTag("Player")) return;
         _playerInside = true;
         _playerHealth = other.GetComponent<PlayerHealth>();
+        _playerOxygen = other.GetComponent<PlayerOxygen>();
+        _playerOxygen?.EnterGasZone();
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("Player")) return;
         _playerInside = false;
+        _playerOxygen?.ExitGasZone();
+        _playerOxygen = null;
         _playerHealth = null;
     }
 }

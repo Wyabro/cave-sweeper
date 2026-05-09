@@ -601,6 +601,7 @@ GameObject:
   - component: {fileID: 437580769}
   - component: {fileID: 437580768}
   - component: {fileID: 437580772}
+  - component: {fileID: 437580773}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -692,6 +693,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaa78645ec001224cababf759a264698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+--- !u!114 &437580773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 437580767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1516e01dbb064324c90ac5fde87b738a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerOxygen
+  _drainRate: 0.05
 --- !u!134 &589240905
 PhysicsMaterial:
   m_ObjectHideFlags: 0
