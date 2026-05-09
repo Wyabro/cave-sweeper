@@ -17,7 +17,7 @@
 - Singleplayer first-person atmospheric puzzle game
 - Torch is only light source — pitch black without it
 
-## Current State (Session 2 complete)
+## Current State (Session 3 complete)
 - FPS controller: WASD, mouse look, Left Ctrl crouch
 - Torch toggle: F key, point light on player camera
 - Cave room: ProBuilder 20x20x5m enclosed box, inverted normals, Cave_Rock material
@@ -27,6 +27,11 @@
 - 3D spatial hiss: gas_hiss_loop.wav, spatialBlend=1, min=1, max=12, Logarithmic rolloff
 - GasCrossfadeLoop: two AudioSources crossfade over overlapDuration (default 4.5s) — no hard loop cut
 - Debug: red point light (intensity 0.3, range 8) on GasPocket_01 as DebugLight child — remove before ship
+- PlayerOxygen component on Player: normalized float 0–1, starts at 1f, drain rate 0.05 (= 1/20s)
+- Drains while inside any gas pocket trigger (binary, multi-pocket counter), refills symmetric outside, clamped [0,1]
+- Death at oxygen ≤ 0 routes through PlayerHealth.Die() — _dead flag in PlayerOxygen prevents re-entry
+- GasPocket caches PlayerOxygen on trigger enter, calls EnterGasZone/ExitGasZone, nulls ref on exit
+- No HUD yet — Oxygen exposed as public read-only property for future binding
 
 ## Planned Systems (not yet built)
 - Torch melee: click to swing, viewmodel with player arms visible at all times
@@ -35,7 +40,6 @@
 - Creatures — variety: rattlesnakes near entrance, deeper creatures TBD (bats, centipedes, spiders)
 - Rock throwing: pickup from ground, throw to distract/spark gas, audio masking of hiss
 - Chalk marking: limited supply, X stamp on wall surface, survival resource
-- Oxygen meter: drains inside gas zones, refills outside, death at zero
 - Health system: drains from creature attacks, no regen (or slow TBD), death at zero
 - HUD: top-left task label, bottom-left torch status, bottom-right health + oxygen bars
 - Checkpoints: save progress and refill resources throughout cave
