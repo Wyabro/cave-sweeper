@@ -17,31 +17,37 @@
 - Singleplayer first-person atmospheric puzzle game
 - Torch is only light source — pitch black without it
 
-## Current State (Session 3 complete)
+## Current State (Session 4 complete)
 - FPS controller: WASD, mouse look, Left Ctrl crouch
 - Torch toggle: F key, point light on player camera
 - Cave room: ProBuilder 20x20x5m enclosed box, inverted normals, Cave_Rock material
 - Lighting: pitch black with no ambient, skybox reflection bug fixed
-- Player tag set to "Player"; PlayerHealth component on Player
+- Player tag set to "Player"; PlayerHealth + PlayerOxygen components on Player
+- PlayerHealth: _maxHealth=100, _currentHealth starts at _maxHealth in Awake; public CurrentHealth, MaxHealth, HealthNormalized (0–1 float); TakeDamage(int) clamps to 0 and calls Die(); Die() reloads scene, guarded by _dead flag
 - GasPocket_01 at (3, 1.5, 3): BoxCollider trigger (3x3x3), GasPocket script (torch-on-inside → PlayerHealth.Die())
 - 3D spatial hiss: gas_hiss_loop.wav, spatialBlend=1, min=1, max=12, Logarithmic rolloff
 - GasCrossfadeLoop: two AudioSources crossfade over overlapDuration (default 4.5s) — no hard loop cut
 - Debug: red point light (intensity 0.3, range 8) on GasPocket_01 as DebugLight child — remove before ship
-- PlayerOxygen component on Player: normalized float 0–1, starts at 1f, drain rate 0.05 (= 1/20s)
-- Drains while inside any gas pocket trigger (binary, multi-pocket counter), refills symmetric outside, clamped [0,1]
-- Death at oxygen ≤ 0 routes through PlayerHealth.Die() — _dead flag in PlayerOxygen prevents re-entry
-- GasPocket caches PlayerOxygen on trigger enter, calls EnterGasZone/ExitGasZone, nulls ref on exit
-- No HUD yet — Oxygen exposed as public read-only property for future binding
+- PlayerOxygen: normalized float 0–1, drain rate 0.05 (= 1/20s), symmetric refill, death at 0 via PlayerHealth.Die()
+- HUD: HUDController on "HUD" GameObject; builds entire Canvas hierarchy at runtime in Awake (no saved scene UI)
+  - Canvas: ScreenSpaceOverlay, CanvasScaler 1920×1080 match 0.5, EventSystem uses InputSystemUIInputModule
+  - Top-left: "CURRENT TASK" bold + italic "Find the way out." — static
+  - Bottom-left: warm square icon + "UNLIT" + "[F] torch" — static (torch binding not wired yet)
+  - Bottom-right: HEALTH bar (10 blocks, driven by PlayerHealth.HealthNormalized) + OXYGEN bar (10 blocks, driven by PlayerOxygen.Oxygen)
+  - Block color = warm on / dim off; SetBar uses Ceil(normalized × N)
+  - All elements raycastTarget=false; PlayerHealth/PlayerOxygen auto-found via FindFirstObjectByType if not assigned
+- TMP Essential Resources imported (Assets/TextMesh Pro/)
+- Input system: project uses New Input System (com.unity.inputsystem 1.19.0); StandaloneInputModule must NOT be used
 
 ## Planned Systems (not yet built)
 - Torch melee: click to swing, viewmodel with player arms visible at all times
+- Torch state binding in HUD (UNLIT/LIT label is currently static)
 - Zone structure: tunnels = single binary zone; chambers = hidden grid of cells (3x3 / 4x4)
 - Creatures — scorpions: light-reactive (flee torch, creep back in dark), attack on proximity, killable with torch swing
 - Creatures — variety: rattlesnakes near entrance, deeper creatures TBD (bats, centipedes, spiders)
 - Rock throwing: pickup from ground, throw to distract/spark gas, audio masking of hiss
 - Chalk marking: limited supply, X stamp on wall surface, survival resource
-- Health system: drains from creature attacks, no regen (or slow TBD), death at zero
-- HUD: top-left task label, bottom-left torch status, bottom-right health + oxygen bars
+- Health damage sources (TakeDamage exists but nothing calls it yet — needs creatures)
 - Checkpoints: save progress and refill resources throughout cave
 - Death/restart flow with UI
 - Level exit + ending vista: Moab canyon at golden hour, implies world continues
