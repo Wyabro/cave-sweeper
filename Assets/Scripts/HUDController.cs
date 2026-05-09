@@ -10,6 +10,9 @@ public class HUDController : MonoBehaviour
     [SerializeField] private PlayerOxygen _playerOxygen;
     [SerializeField] private int _blockCount = 10;
 
+    private TorchController _torchController;
+    private TextMeshProUGUI _torchStatusText;
+
     private static readonly Color TextPrimary = new Color(0.88f, 0.80f, 0.66f, 0.85f);
     private static readonly Color TextDim     = new Color(0.88f, 0.80f, 0.66f, 0.50f);
     private static readonly Color PanelBg     = new Color(0.05f, 0.04f, 0.03f, 0.45f);
@@ -21,8 +24,9 @@ public class HUDController : MonoBehaviour
 
     private void Awake()
     {
-        if (_playerHealth == null) _playerHealth = FindFirstObjectByType<PlayerHealth>();
-        if (_playerOxygen == null) _playerOxygen = FindFirstObjectByType<PlayerOxygen>();
+        if (_playerHealth == null) _playerHealth = FindAnyObjectByType<PlayerHealth>();
+        if (_playerOxygen == null) _playerOxygen = FindAnyObjectByType<PlayerOxygen>();
+        if (_torchController == null) _torchController = FindAnyObjectByType<TorchController>();
 
         var canvas = BuildCanvas();
         BuildTopLeft(canvas.transform);
@@ -37,6 +41,8 @@ public class HUDController : MonoBehaviour
         if (_healthBlocks == null || _oxygenBlocks == null) return;
         SetBar(_healthBlocks, _playerHealth != null ? _playerHealth.HealthNormalized : 1f);
         SetBar(_oxygenBlocks, _playerOxygen != null ? _playerOxygen.Oxygen : 1f);
+        if (_torchStatusText != null && _torchController != null)
+            _torchStatusText.text = _torchController.IsOn ? "LIT" : "UNLIT";
     }
 
     // Canvas + EventSystem ─────────────────────────────────────────────────
@@ -55,7 +61,7 @@ public class HUDController : MonoBehaviour
 
         go.AddComponent<GraphicRaycaster>();
 
-        if (FindFirstObjectByType<EventSystem>() == null)
+        if (FindAnyObjectByType<EventSystem>() == null)
         {
             var esGo = new GameObject("EventSystem");
             esGo.AddComponent<EventSystem>();
@@ -100,9 +106,9 @@ public class HUDController : MonoBehaviour
         iconImg.raycastTarget = false;
         SetRT(iconRt, new Vector2(8f, -12f), new Vector2(14f, 14f));
 
-        var status = MakeTMP(panel, "TorchStatus", "UNLIT",
+        _torchStatusText = MakeTMP(panel, "TorchStatus", "UNLIT",
             14f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
-        SetRT(status.rectTransform, new Vector2(28f, -8f), new Vector2(130f, 20f));
+        SetRT(_torchStatusText.rectTransform, new Vector2(28f, -8f), new Vector2(130f, 20f));
 
         var hint = MakeTMP(panel, "KeybindHint", "[F] torch",
             11f, FontStyles.Normal, TextAlignmentOptions.TopLeft);
