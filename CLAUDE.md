@@ -17,7 +17,7 @@
 - Singleplayer first-person atmospheric puzzle game
 - Torch is only light source — pitch black without it
 
-## Current State (Session 6 complete)
+## Current State (Session 7 complete)
 - FPS controller: WASD, mouse look, Left Ctrl crouch
 - Torch toggle: F key, point light on player camera
 - Cave room: ProBuilder 20x20x5m enclosed box, inverted normals, Cave_Rock material
@@ -41,6 +41,13 @@
 - TorchController: left-click swings TorchLight (localPosition lunge: +0.4z/-0.15y and back over 0.3s); _swinging guard prevents re-entry; TorchMeleeHit() stub present for future damage; point light rotation has no visual effect — translation used instead
 - HUD torch binding: TorchStatus label updates each frame to "LIT"/"UNLIT" via TorchController.IsOn
 - HUD styling: no panel backgrounds, atmospheric opacity, character spacing on labels, torch icon = head+shaft primitives, "[F] TORCH" caps, 2.5x scale pass applied; note HUD rebuilds in Awake() so scale changes only visible after full play mode restart
+- Zone system: Zone.cs (trigger-based zones, ZoneType enum Tunnel/ChamberCell, hasGas bool, torch-on-in-gas death, oxygen drain hookup, ZoneManager reporting, editor gizmos green=safe red=gas)
+- ZoneManager.cs: singleton, HashSet<Zone> tracking player occupancy, IsInGasZone() query API
+- Chamber.cs: grid generator, rows×cols BoxCollider trigger children with Zone components, bool[] gasMask for gas assignment, [ContextMenu("Regenerate Cells")]
+- Test geometry: Tunnel (3×4×12m) connecting +Z wall of original room, CaveRoom2 (10×5×10m) at tunnel end, WallFill_Left/Right/Top closing wall around 3×4m tunnel opening
+- GasPocket_01 migrated: GasPocket component replaced with Zone (type=Tunnel, hasGas=true); single AudioSource loop=True, playOnAwake=True (no GasCrossfadeLoop — simple loop)
+- Chamber_Cave: 3×3 grid on original room, one corner cell marked gas
+- TunnelGasZone: GasCrossfadeLoop + two AudioSources added (spatialBlend=1, min=1, max=12, Logarithmic, gas_hiss_loop.wav); hiss is spatial and seamless
 
 ## Planned Systems (not yet built)
 - Torch melee: viewmodel with player arms (TorchMeleeHit stub ready for damage hookup)
